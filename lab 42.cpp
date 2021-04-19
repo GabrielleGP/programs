@@ -1,3 +1,5 @@
+/*metoda lui Hestenes-Stiefel de optimizare neliniară fără restricții*/
+
 #include<iostream>
 #include<math.h>
 
