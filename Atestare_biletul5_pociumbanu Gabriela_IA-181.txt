@@ -1,3 +1,6 @@
+<!-- Aplicatie Android Studio care afla  suma, suma numerelor negative,  numar maxim, numere mai mici ca 0  din edittexts-->
+
+
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Parent linear layout with vertical orientation -->
 <LinearLayout
