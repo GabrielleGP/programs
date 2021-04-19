@@ -1,3 +1,5 @@
+/*minimul global*/
+
 #include<iostream>
 #include<math.h>
 
