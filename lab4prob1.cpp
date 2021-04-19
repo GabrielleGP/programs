@@ -1,3 +1,7 @@
+/*Să se creeze clasa mobilă, care conţine informaţie despre preţ, stil şi domeniul de utilizare (oficiu, bucătărie şi altă mobilă). 
+Pentru setarea câmpurilor textuale să se folosească memoria dinamică. 
+Definiţi clasele derivate masa şi scaun. Definiţi constructorii, destructorul, operatorii de atribuire şi alte funcţii necesare.*/
+
 #include <iostream>
 #include <string.h>
 #include <cstdlib>
