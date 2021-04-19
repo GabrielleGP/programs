@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Parent linear layout with vertical orientation -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="77dp">
+
+
+        <EditText
+            android:id="@+id/poc1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="21dp"
+            android:text="3,6,-3,9,0,-8" />
+
+        <TextView
+            android:id="@+id/poc3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="134dp"
+            android:layout_toRightOf="@+id/poc1"
+            android:text="Poc3"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+        <EditText
+            android:id="@+id/poc2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/poc3"
+            android:text="5,-2,-3,3,0,6,-4,6" />
+
+        <TextView
+            android:id="@+id/poc4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="353dp"
+            android:layout_toRightOf="@+id/poc2"
+            android:text="Poc4"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="77dp">
+
+        <Button android:id="@+id/poc1b" android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true" android:layout_marginRight="10px"
+            android:text="Pocb1" />
+
+        <Button android:layout_width="wrap_content" android:id="@+id/poc2b" android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/poc1b"
+            android:layout_alignTop="@id/poc1b"  android:text="Pocb2" />
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/poc3b"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pocb3" />
+
+    <Button
+        android:id="@+id/poc4b"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pocb4"
+        android:layout_below="@id/poc3b"/>
+
+</LinearLayout>
+
+
+
+package com.example.atestare;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+public class MainActivity extends AppCompatActivity {
+
+    //variabile
+    EditText poc1, poc2;
+    TextView poc3, poc4;
+    Button pocb1, pocb2, pocb3, pocb4;
+
+    int max = 0, s1, s2, s3, s4;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        //creare conexiune cu UI prin id
+        poc1 = (EditText) findViewById(R.id.poc1);
+        poc2 = (EditText) findViewById(R.id.poc2);
+
+        poc3 = (TextView) findViewById(R.id.poc3);
+        poc4 = (TextView) findViewById(R.id.poc4);
+
+        pocb1 = (Button) findViewById(R.id.pocb1);
+        pocb2 = (Button) findViewById(R.id.pocb2);
+        pocb3 = (Button) findViewById(R.id.pocb3);
+        pocb4 = (Button) findViewById(R.id.pocb4);
+
+        //declarare array din exemplu
+        String _arr = "[3,6,-3,9,0,-8]";
+        String _arr1 = "[5,-2,-3,3,0,6,-4,6]";
+
+        //setare text în EditText-e
+        poc1.setText(_arr);
+        poc2.setText(_arr1);
+
+        //primul button
+        pocb1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String arr = poc1.getText().toString();//extragere date din EditText-ul poc1
+                String arr1 = poc2.getText().toString();//extragere date din EditText-ul poc2
+                String[] items = arr.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(",");
+                String[] items1 = arr1.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(",");
+
+                int[] results = new int[items.length];
+                int[] results1 = new int[items1.length];
+                s1 = 0;
+                s2 = 0;
+
+                //din array String în array Int la poc1
+                for (int i = 0; i < items.length; i++) {
+                    try {
+                        results[i] = Integer.parseInt(items[i]);
+                    } catch (NumberFormatException nfe) {
+                    };
+                }
+                //din array String în array Int la poc2
+                for (int i = 0; i < items1.length; i++) {
+                    try {
+                        results1[i] = Integer.parseInt(items1[i]);
+                    } catch (NumberFormatException nfe) {
+                    };
+                }
+
+                for (int i = 0; i < items1.length; i++)
+                    s1 +=results1[i]; // aflare sumă
+
+                poc3.setText(""+s1); //se introduce rezultatul în TextView-ul poc3
+                for (int i = 0; i < items.length; i++)
+                    if(results[i] < 0)//suma numerelor negative
+                        s2 += results[i];
+                poc4.setText(""+s2);//se introduce rezultatul în TextView-ul poc4
+
+            }
+        });
+
+        pocb2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String arr = poc1.getText().toString();
+                String arr1 = poc2.getText().toString();
+                String[] items = arr.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(",");
+                String[] items1 = arr1.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(",");
+
+                int[] results = new int[items.length];
+                int[] results1 = new int[items1.length];
+
+                s3 = 0;
+                s4 = 0;
+                //din array String în array Int la poc1
+                for (int i = 0; i < items.length; i++) {
+                    try {
+                        results[i] = Integer.parseInt(items[i]);
+                        if(results[i]>max)
+                            max = results[i];
+                    } catch (NumberFormatException nfe) {
+                    };
+                }
+                //din array String în array Int la poc2
+                for (int i = 0; i < items1.length; i++) {
+                    try {
+                        results1[i] = Integer.parseInt(items1[i]);
+                        if(results1[i]>max)
+                            max = results1[i];//aflare număr maxim din poc2
+                    } catch (NumberFormatException nfe) {
+                    };
+                }
+
+                for (int i = 0; i < items.length; i++)
+                    if(results[i] < 0)//numere mai mici ca 0 din poc 1
+                        s3 += results[i];
+                poc3.setText(s1+""+s3);//afișare a rezultatului dim pucntul 2 pe lângă puncutl 1
+
+                for (int i = 0; i < items1.length; i++)
+                    if(results1[i] > max)
+                        s4 += results[i];
+                poc4.setText(s2+""+s4);
+
+            }
+        });
+
+
+    }
+}
