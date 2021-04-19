@@ -1,3 +1,7 @@
+/*Să se creeze clasa garaj, care conţine suprafaţa. Determinaţi constructorii şi metodele de acces.
+Creaţi clasa casa, care conţine odăi, o bucătarie (suprafaţa ei) şi garaj. 
+Definiţi clasa derivată vilă (ca parametru adăugator – mărimea lotului de pamânt).  Determinaţi constructorii, destructorul şi fluxul de ieşire.*/
+
 #include <iostream>
 #include <string.h>
 #include <cstdlib>
