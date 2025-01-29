@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Activity Randomizer</title>
+<style>
+body {
+  font-family: sans-serif;
+  text-align: center;
+  margin-top: 50px;
+}
+#activityDisplay {
+  font-size: 24px;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  min-height: 50px; /* Ensure some space even when empty */
+}
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  border-radius: 5px;
+}
+button:hover {
+  background-color: #45a049;
+}
+
+#multipleActivitiesDisplay {
+    margin-top: 20px;
+}
+
+#multipleActivitiesDisplay div {
+    margin-bottom: 5px;
+}
+</style>
+<link rel="icon" href="favicon.png" type="image/png">
+
+</head>
+<body>
+    <header>  <img src="Activity.png" alt="Your Logo" id="logo" height="100px">  <h1>Activity Randomizer</h1>
+    </header>
+
+<div id="activityDisplay"></div>
+<button onclick="displayActivity()">Get Activity</button>
+
+<!-- <div id="multipleActivitiesDisplay">
+    <h2>Multiple Activities:</h2>
+    <div id="activity1"></div>
+    <div id="activity2"></div>
+    <div id="activity3"></div>
+</div> -->
+
+
+<script>
+const activities = [
+  "Go for a walk in the park",
+  "Go for a hike",
+  "Try a new recipe",
+  "Meditate for 30 minutes",
+  "Call a friend or family member",
+  "Work on a personal project",
+  "Do some gardening",
+  "Do a Yoga class",
+  "Do a Pilates class",
+  "Go swimming",
+  "Go to a dance class",
+  "Practice painting",
+  "Practice photography",
+  "Play a game",
+  "Visit a museum or art gallery",
+  "Bake something delicious",
+  "Go to a concert or play",
+  "Volunteer your time",
+  "Go play Volleyball",
+  "Go play Table Tennis",
+  "Do some modeling",
+];
+
+function chooseActivity() {
+  const randomIndex = Math.floor(Math.random() * activities.length);
+  return activities[randomIndex];
+}
+
+function displayActivity() {
+  const activity = chooseActivity();
+  document.getElementById("activityDisplay").textContent = activity;
+
+  // Display multiple activities (example)
+//   const multipleActivities = chooseMultipleActivities(3);
+//   document.getElementById("activity1").textContent = multipleActivities[0];
+//   document.getElementById("activity2").textContent = multipleActivities[1];
+//   document.getElementById("activity3").textContent = multipleActivities[2];
+
+}
+
+function chooseMultipleActivities(numActivities) {
+  const chosenActivities = [];
+  for (let i = 0; i < numActivities; i++) {
+    chosenActivities.push(chooseActivity());
+  }
+  return chosenActivities;
+}
+
+
+</script>
+
+</body>
+</html>
