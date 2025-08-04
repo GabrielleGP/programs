@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Holiday Randomizer</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            background: #4f46e5;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #3730a3;
+        }
+
+        .center {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+    <link rel="icon" href="favicon.png" type="image/png">
+</head>
+
+<body>
+    <div id="root" class="container"></div>
+
+    <!-- React + Babel -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <!-- App Script -->
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        function shuffle(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+
+        function isValidDate(date, publicHolidays) {
+            const d = date.getDay();
+            return d !== 0 && d !== 6 && !publicHolidays.includes(date.toISOString().split("T")[0]);
+        }
+
+        function getRandomDateInQuarter(year, startM, endM) {
+            const start = new Date(year, startM, 1);
+            const end = new Date(year, endM + 1, 0);
+            const days = (end - start) / 86400000 - 4;
+            return new Date(start.getTime() + Math.floor(Math.random() * days) * 86400000);
+        }
+
+        async function fetchTravelData() {
+            const year = new Date().getFullYear();  // Define year first
+
+            // Replace with your real API endpoints
+            const [solo, volunteer, romantic, activities, holidays, visaFree] = await Promise.all([
+                Promise.resolve(["Lisbon", "Kyoto", "Iceland", "Bali", "New Zealand",
+                    "Seoul", "Reykjavik", "Ljubljana", "Prague", "Chiang Mai",
+                    "Porto", "Tbilisi", "Mexico City", "Granada", "Zagreb"]),
+                Promise.resolve(["Costa Rica", "Peru", "Brazil", "Nepal", "Kenya",
+                    "Tanzania", "India", "South Africa", "Philippines", "Uganda",
+                    "Cambodia", "Vietnam", "Ghana", "Colombia", "Thailand"]),
+                Promise.resolve(["Santorini", "Amalfi Coast", "Maui", "Paris", "Mauritius",
+                    "Maldives", "Amsterdam", "Venice", "Lake Como", "Cappadocia",
+                    "Kyoto", "Quebec City", "Bruges", "Vienna", "Bora Bora"]),
+                Promise.resolve({
+                    solo: [
+                        "Go hiking", "Join a photo tour", "Meditate in nature",
+                        "Take a local cooking class", "Explore museums", "Write in a journal"
+                    ],
+                    volunteer: [
+                        "Teach children", "Plant trees", "Help in animal shelters",
+                        "Support women’s empowerment", "Build sustainable homes"
+                    ],
+                    romantic: [
+                        "Sunset cruise", "Couple’s spa day", "Candlelight dinner",
+                        "Horseback ride on the beach", "Hot air balloon ride"
+                    ],
+                    friends: [
+                        "Food tour", "Adventure park", "Escape room",
+                        "Game night in Airbnb", "City scavenger hunt", "Kayaking"
+                    ]
+                }),
+                //Promise.resolve([{ date: "2025-08-04" }, { date: "2025-12-25" }]), // mock public holidays
+                fetch(`https://date.nager.at/api/v3/PublicHolidays/${year}/RO`).then(res => res.json()),
+                Promise.resolve(["Lisbon", "Iceland", "Peru", "Nepal", "Santorini", "Paris", "Mauritius",
+                    "South Africa", "Mexico City", "Amsterdam", "Kyoto", "Bruges", "Seoul",
+                    "New Zealand", "Costa Rica", "Thailand", "Brazil", "Tbilisi", "Porto", "Vienna"])
+            ]);
+            return {
+                solo,
+                volunteer,
+                romantic,
+                activities,
+                publicHolidays: holidays.map(d => d.date),
+                visaFree
+            };
+        }
+
+        function App() {
+            const [plan, setPlan] = useState([]);
+            const [loading, setLoading] = useState(false);
+            const [error, setError] = useState(null);
+
+            async function generateHolidays(year) {
+                setLoading(true);
+                setError(null);
+                try {
+                    const { solo, volunteer, romantic, activities, publicHolidays, visaFree } = await fetchTravelData();
+
+                    const types = shuffle([
+                        { key: "Solo", list: solo },
+                        { key: "Volunteer", list: volunteer },
+                        { key: "Romantic", list: romantic },
+                        { key: "Friends", list: solo.concat(romantic) }
+                    ]);
+
+                    const quarters = [[0, 2], [3, 5], [6, 8], [9, 11]];
+
+                    const newPlan = quarters.map(([sm, em], idx) => {
+                        const { key, list } = types[idx];
+                        const filteredDest = list.filter(d => visaFree.includes(d));
+                        const destList = filteredDest.length ? filteredDest : list;
+                        const destination = shuffle(destList)[0];
+                        const activity = shuffle(activities[key.toLowerCase()] || ["Explore local culture"])[0];
+
+                        let start, tries = 0;
+                        do {
+                            start = getRandomDateInQuarter(year = new Date().getFullYear(), sm, em);
+                            tries++;
+                        } while (tries < 1000 && ![...Array(5)].every((_, i) =>
+                            isValidDate(new Date(start.getTime() + i * 86400000), publicHolidays)
+                        ));
+                        if (!start) throw new Error("Could not find valid date");
+
+                        const end = new Date(start);
+                        end.setDate(start.getDate() + 4);
+
+                        return {
+                            quarter: `Q${idx + 1}`,
+                            type: key,
+                            destination,
+                            activity,
+                            start: start.toISOString().split("T")[0],
+                            end: end.toISOString().split("T")[0]
+                        };
+                    });
+
+                    setPlan(newPlan);
+                } catch (err) {
+                    console.error("Error generating holidays:", err);
+                    setError("Something went wrong while generating holidays. Try again later.");
+                } finally {
+                    setLoading(false);
+                }
+            }
+
+            useEffect(() => {
+                generateHolidays();
+            }, []);
+
+            return (
+                <div>
+                    <h1 className="center">🌍 Holiday Randomizer</h1>
+                    <div className="center">
+                        <button onClick={generateHolidays}>Generate Holiday Plan</button>
+                    </div>
+                    {loading && <p className="center">Loading your plan...</p>}
+                    {error && <p className="center" style={{ color: 'red' }}>{error}</p>}
+                    {!loading && !error && plan.map((holiday, i) => (
+                        <div key={i} className="card">
+                            <h2>{holiday.quarter} – {holiday.type}</h2>
+                            <p><strong>Destination:</strong> {holiday.destination}</p>
+                            <p><strong>Activity:</strong> {holiday.activity}</p>
+                            <p><strong>Dates:</strong> {holiday.start} ➡ {holiday.end}</p>
+                        </div>
+                    ))}
+                </div>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+</body>
+
+</html>
