@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Life RPG (work in progress)
 
-## Getting Started
+A habit tracker that turns everyday tasks into game quests. Completing daily quests earns XP, builds streaks and levels up your player stats.
 
-First, run the development server:
+## Status
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Early prototype. The dashboard page, quest card and Supabase connection are in place; the quest generator, game logic, stats and login pages are still to be built.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Planned features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Daily quests generated from your goals
+- XP bar, levels and player stats
+- Streak tracking
+- Login and saved progress with Supabase
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Tech
 
-## Learn More
+Next.js, React, TypeScript, Tailwind CSS, Supabase, Framer Motion
 
-To learn more about Next.js, take a look at the following resources:
+## Run it locally
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Create a `.env.local` file with your Supabase project values:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   ```
+   NEXT_PUBLIC_SUPABASE_URL=your-project-url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+   ```
 
-## Deploy on Vercel
+2. Install and start:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   ```bash
+   npm install
+   npm run dev
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3. Open http://localhost:3000.
